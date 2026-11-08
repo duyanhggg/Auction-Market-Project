@@ -1,0 +1,80 @@
+🗄️ SERVER - BACKEND FOLDER STRUCTURE & TODO LIST (Node.js & Express)
+
+CẤU TRÚC THƯ MỤC:
+--------------------------------------------------------------------------------
+server/
+│
+├── config/
+│   └── db.js                 ← [DÙNG CHUNG] Kết nối cơ sở dữ liệu MongoDB Atlas
+│
+├── middlewares/
+│   ├── authMiddleware.js     ← [TV1] Kiểm tra, giải mã token JWT (verifyToken), phân quyền Admin
+│   └── errorMiddleware.js    ← [TV1] Bắt và xử lý lỗi tập trung, trả về đúng Status Code
+│
+├── models/                   ← TẦNG ĐỊNH NGHĨA CƠ SỞ DỮ LIỆU (MONGOOSE SCHEMA)
+│   ├── User.js               ← [TV1] Schema thông tin người dùng (Họ tên, Email, Mật khẩu, Role)
+│   ├── Product.js            ← [TV2] Schema sản phẩm (Mô tả đồ cũ, Giá hiện tại, Giá sàn, EndTime)
+│   └── Bid.js                ← [TV3] Schema lượt ra giá (productId, bidderId, bidAmount, thời gian đặt)
+│
+├── controllers/              ← TẦNG XỬ LÝ LOGIC NGHIỆP VỤ (BUSINESS LOGIC)
+│   ├── authController.js     ← [TV1] Xử lý logic Đăng ký (bcrypt) & Đăng nhập (tạo JWT)
+│   ├── productController.js  ← [TV2] Xử lý CRUD sản phẩm đồ cũ & validate thời gian đăng bán
+│   ├── bidController.js      ← [TV3] Thuật toán xử lý đặt giá: chặn giá thấp, chặn khi hết giờ phiên
+│   └── dashboardController.js← [TV4] Logic lấy lịch sử đấu giá, danh sách đồ đã thắng của từng user
+│
+├── routes/                   ← TẦNG ĐỊNH TUYẾN ĐƯỜNG DẪN API (RESTful API Methods)
+│   ├── authRoutes.js         ← [TV1] Định tuyến POST /api/auth/register, POST /api/auth/login
+│   ├── productRoutes.js      ← [TV2 & TV4] API Đăng/Sửa/Xóa đồ cũ; API Tìm kiếm, Lọc khoảng giá, Phân trang
+│   ├── bidRoutes.js          ← [TV3] Định tuyến POST /api/bids (gửi lượt đấu giá mới)
+│   └── dashboardRoutes.js    ← [TV4] Định tuyến GET /api/users/dashboard
+│
+├── .env                      ← [DÙNG CHUNG] Chứa mã bí mật JWT, link database (không đẩy lên GitHub)
+├── .gitignore                ← [DÙNG CHUNG] Khai báo chặn file .env và thư mục node_modules
+├── package.json              ← [DÙNG CHUNG] Quản lý các thư viện cài đặt ở Backend
+└── server.js                 ← [DÙNG CHUNG] File khởi chạy server chính, cấu hình CORS, tích hợp các Routes
+
+--------------------------------------------------------------------------------
+DANH SÁCH CÔNG VIỆC CẦN LÀM (TODO CHECKLIST) THEO THÀNH VIÊN:
+--------------------------------------------------------------------------------
+
+[DÙNG CHUNG]
+  [ ] db.js: Cấu hình chuỗi kết nối MongoDB Atlas qua Mongoose
+  [ ] server.js: Cấu hình Express app, CORS, Middleware parse JSON/urlencoded, mount các Routes
+  [ ] .env: Điền PORT, MONGO_URI, JWT_SECRET, CLIENT_URL
+  [ ] .gitignore: Chặn node_modules và .env không đẩy lên GitHub
+
+[TV1] - Xác thực, Người dùng & Xử lý lỗi
+  [ ] User.js: Mongoose Schema cho User (fullName, email, password, role)
+  [ ] authMiddleware.js: Middleware verifyToken (giải mã JWT từ header Authorization Bearer)
+  [ ] authMiddleware.js: Middleware isAdmin (kiểm tra req.user.role === 'admin')
+  [ ] errorMiddleware.js: Middleware bắt lỗi tập trung (errorHandler) trả về đúng status code & message JSON
+  [ ] authController.js: register (mã hóa mật khẩu bằng bcryptjs, tạo user, sinh JWT)
+  [ ] authController.js: login (so sánh hash mật khẩu bcryptjs, sinh JWT)
+  [ ] authRoutes.js: Định tuyến POST /api/auth/register và POST /api/auth/login
+
+[TV2] - Quản lý Sản phẩm Đồ Cũ (CRUD) & Thời gian phiên
+  [ ] Product.js: Mongoose Schema cho Product (name, description, imageUrl, startingPrice, currentPrice, bidStep, endTime, sellerId, currentBidderId, status)
+  [ ] productController.js: createProduct (validate endTime > hiện tại, lưu người bán sellerId từ req.user)
+  [ ] productController.js: updateProduct (chỉ cho phép người bán hoặc admin cập nhật)
+  [ ] productController.js: deleteProduct (chỉ cho phép người bán hoặc admin xóa)
+  [ ] productController.js: getProductById (lấy chi tiết sản phẩm kèm thông tin người bán)
+  [ ] productRoutes.js: Định tuyến các API CRUD cho /api/products
+
+[TV3] - Thuật toán Đấu Giá & Kiểm soát Lượt ra giá
+  [ ] Bid.js: Mongoose Schema cho Bid (productId, bidderId, bidAmount, bidTime)
+  [ ] bidController.js: placeBid (chặn người bán tự đấu giá món đồ của chính mình)
+  [ ] bidController.js: placeBid (chặn đặt giá khi phiên đã hết giờ hoặc status != 'active')
+  [ ] bidController.js: placeBid (chặn giá đặt thấp hơn currentPrice + bidStep)
+  [ ] bidController.js: placeBid (cập nhật currentPrice và currentBidderId trong bảng Product)
+  [ ] bidController.js: getBidsByProduct (lấy lịch sử các lượt ra giá của 1 sản phẩm)
+  [ ] bidRoutes.js: Định tuyến POST /api/bids và GET /api/bids/product/:productId
+
+[TV4] - Tìm kiếm, Lọc giá, Phân trang & Dashboard cá nhân
+  [ ] productController.js: getProducts (tìm kiếm theo từ khóa keyword trong tên/mô tả bằng regex)
+  [ ] productController.js: getProducts (lọc theo khoảng giá minPrice, maxPrice)
+  [ ] productController.js: getProducts (phân trang page, limit với skip/limit của Mongoose)
+  [ ] dashboardController.js: getUserDashboard (danh sách đồ người dùng đã đăng bán)
+  [ ] dashboardController.js: getUserDashboard (danh sách các phiên đang tham gia và đang dẫn đầu)
+  [ ] dashboardController.js: getUserDashboard (danh sách các sản phẩm đã thắng cuộc)
+  [ ] dashboardController.js: getUserDashboard (lịch sử tất cả lượt ra giá của người dùng)
+  [ ] dashboardRoutes.js: Định tuyến GET /api/users/dashboard (gắn verifyToken)

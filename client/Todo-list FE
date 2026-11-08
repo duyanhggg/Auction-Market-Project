@@ -1,0 +1,69 @@
+🎨 CLIENT - FRONTEND FOLDER STRUCTURE & TODO LIST (React + Vite)
+
+CẤU TRÚC THƯ MỤC:
+--------------------------------------------------------------------------------
+public/                   ← [DÙNG CHUNG] Chứa các tài nguyên tĩnh như logo ứng dụng, icon trang web
+src/
+├── assets/               ← [DÙNG CHUNG] Chứa hình ảnh minh họa hệ thống, ảnh nền banner chợ đồ cũ
+│
+├── components/           ← CÁC REUSABLE COMPONENT (GIAO DIỆN DÙNG CHUNG)
+│   ├── Navbar.jsx        ← [TV1/TV2] Thanh menu điều hướng đầu trang (Responsive)
+│   ├── Footer.jsx        ← [TV2] Chân trang thông tin bản quyền ứng dụng
+│   ├── ProductCard.jsx   ← [TV4] Thẻ hiển thị nhanh sản phẩm ngoài trang chủ (Ảnh, giá hiện tại, nút xem)
+│   └── CountdownTimer.jsx← [TV3] Bộ đếm ngược thời gian thực, tự khóa nút khi phiên đấu giá về 0
+│
+├── context/              ← QUẢN LÝ TRẠNG THÁI XÁC THỰC TOÀN CỤC
+│   └── AuthContext.jsx   ← [TV1] Lưu token, thông tin User đã login, hàm login/logout toàn ứng dụng
+│
+├── store/                ← QUẢN LÝ TRẠNG THÁI DỮ LIỆU ĐỘNG (ZUSTAND / REDUX)
+│   └── filterStore.js    ← [TV4] Quản lý lưu trữ bộ lọc tìm kiếm, khoảng giá của trang chủ
+│
+├── routes/               ← BẢO VỆ TUYẾN ĐƯỜNG GIAO DIỆN
+│   └── ProtectedRoute.jsx← [TV1] Chặn người dùng chưa đăng nhập vào trang đăng bán, trang cá nhân
+│
+├── pages/                ← 6 MÀN HÌNH CHÍNH THEO YÊU CẦU BẮT BUỘC CỦA ĐỀ BÀI
+│   ├── Home.jsx          ← [TV4] Trang chủ: Thanh tìm kiếm, danh mục, list sản phẩm đồ cũ phân trang
+│   ├── Login.jsx         ← [TV1] Trang Đăng nhập hệ thống (Form lấy dữ liệu truyền vào AuthContext)
+│   ├── Register.jsx      ← [TV1] Trang Đăng ký tài khoản mới cho người dùng
+│   ├── CreateProduct.jsx ← [TV2] Trang Đăng bán (Form nhập thông tin đồ cũ, chọn ngày giờ đóng phiên)
+│   ├── ProductDetail.jsx ← [TV3] Trang Chi tiết: hiển thị thông số đồ cũ, countdown, ô nhập tiền đặt giá
+│   └── Dashboard.jsx     ← [TV4] Trang Lịch sử cá nhân: Thống kê đồ mình đã đăng, các phiên mình đang thắng
+│
+├── App.jsx               ← [TV2] File gốc cấu hình hệ thống React Router định tuyến liên kết các Trang
+├── index.css             ← [DÙNG CHUNG] Nơi cấu hình CSS toàn cục (Tailwind CSS hoặc CSS thuần)
+└── main.jsx              ← [DÙNG CHUNG] File khởi tạo ứng dụng React kết nối vào file index.html ngoài root
+
+├── package.json          ← [DÙNG CHUNG] Quản lý các thư viện cài đặt ở Frontend (axios, react-router-dom)
+└── vite.config.js        ← [DÙNG CHUNG] File cấu hình vận hành dự án của Vite
+
+--------------------------------------------------------------------------------
+DANH SÁCH CÔNG VIỆC CẦN LÀM (TODO CHECKLIST) THEO THÀNH VIÊN:
+--------------------------------------------------------------------------------
+
+[TV1] - Xác thực người dùng & Bảo vệ tuyến đường
+  [ ] AuthContext.jsx: Quản lý đăng nhập, lưu token/user vào localStorage, hàm logout
+  [ ] Login.jsx: Form đăng nhập, validate email/password, gọi API /api/auth/login
+  [ ] Register.jsx: Form đăng ký tài khoản mới, gọi API /api/auth/register
+  [ ] ProtectedRoute.jsx: Chặn truy cập khi chưa login, tự động chuyển về /login
+  [ ] Navbar.jsx: Tích hợp nút Đăng nhập / Đăng ký / Đăng xuất theo trạng thái Auth
+
+[TV2] - Quản lý Sản phẩm, Điều hướng & Giao diện chung
+  [ ] App.jsx: Cấu hình React Router liên kết các trang & bọc AuthProvider
+  [ ] Navbar.jsx: Thiết kế giao diện thanh điều hướng Responsive (Desktop & Mobile)
+  [ ] Footer.jsx: Chân trang bản quyền, thông tin ứng dụng
+  [ ] CreateProduct.jsx: Form đăng bán đồ cũ (tên, mô tả, ảnh, giá sàn, chọn ngày giờ đóng phiên)
+
+[TV3] - Cơ chế Đấu giá & Thời gian thực
+  [ ] CountdownTimer.jsx: Bộ đếm ngược thời gian thực (ngày, giờ, phút, giây), tự khóa khi về 0
+  [ ] ProductDetail.jsx: Hiển thị thông số đồ cũ, ảnh, giá hiện tại cao nhất
+  [ ] ProductDetail.jsx: Ô nhập tiền đặt giá (chặn giá thấp hơn mức yêu cầu, gọi API /api/bids)
+  [ ] ProductDetail.jsx: Danh sách lịch sử các lượt ra giá theo thời gian thực
+
+[TV4] - Tìm kiếm, Lọc & Trang Dashboard cá nhân
+  [ ] filterStore.js: Quản lý state tìm kiếm, lọc theo khoảng giá và phân trang
+  [ ] ProductCard.jsx: Thẻ hiển thị nhanh sản phẩm ngoài trang chủ (ảnh, giá hiện tại, countdown)
+  [ ] Home.jsx: Thanh tìm kiếm theo từ khóa + bộ lọc khoảng giá + phân trang sản phẩm
+  [ ] Dashboard.jsx: Thống kê đồ mình đã đăng bán
+  [ ] Dashboard.jsx: Danh sách các phiên mình đang dẫn đầu
+  [ ] Dashboard.jsx: Danh sách các sản phẩm mình đã đấu giá thắng cuộc
+  [ ] Dashboard.jsx: Lịch sử tất cả các lượt đặt giá cá nhân
