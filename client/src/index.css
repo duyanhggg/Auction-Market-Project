@@ -137,8 +137,3 @@ body {
     align-items: flex-start;
   }
 }
-
-@media (max-width: 600px) {
-  .nav-menu { display: none; flex-direction: column; width: 100%; }
-  nav button[aria-label="Toggle menu"] { display: block !important; }
-}
