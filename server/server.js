@@ -19,8 +19,6 @@ app.use('/api/auth', authRoutes);
 
 // Nơi TV2, TV3, TV4 gắn thêm route sau này:
 // app.use('/api/products', productRoutes);
-const productRoutes = require('./routes/productRoutes');
-app.use('/api/products', productRoutes);
 // app.use('/api/bids', bidRoutes);
 
 // Bắt lỗi đường dẫn không tồn tại (404)

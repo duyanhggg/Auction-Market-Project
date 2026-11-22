@@ -27,3 +27,4 @@ const ProtectedRoute = ({ adminOnly = false }) => {
 };
 
 export default ProtectedRoute;
+
