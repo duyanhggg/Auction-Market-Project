@@ -4,7 +4,6 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
-import ProductDetail from './pages/ProductDetail';
 
 const Navbar = () => {
   const { isAuthenticated, user, logout } = useAuth();
@@ -22,7 +21,9 @@ const Navbar = () => {
           </>
         ) : (
           <>
-            <span>Xin chào, <strong>{user?.fullName}</strong></span>
+            <span>
+              Xin chào, <strong>{user?.fullName}</strong>
+            </span>
             <Link to="/dashboard">Bảng điều khiển</Link>
             <button
               onClick={logout}
@@ -50,17 +51,14 @@ function App() {
       <BrowserRouter>
         <Navbar />
         <Routes>
-          {/* Trang chủ mặc định chuyển hướng về /login */}
           <Route path="/" element={<Navigate to="/login" replace />} />
-          
-          {/* Các trang xác thực công khai */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
           {/* Các trang bảo vệ yêu cầu đăng nhập */}
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/products/:id" element={<ProductDetail />} />
+            {/* TV2, TV3, TV4 sẽ gắn thêm Route sản phẩm và đấu giá tại đây */}
           </Route>
         </Routes>
       </BrowserRouter>
