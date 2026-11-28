@@ -52,17 +52,18 @@ const Dashboard = () => {
         logout();
         navigate('/login');
       }
-    } catch (err) {
+    } catch {
       setError('Không thể xóa tài khoản lúc này');
     }
   };
 
   return (
     <div className="auth-wrapper">
-      <div className="auth-card" style={{ maxWidth: '600px' }}>
-        <h2>Bảng Điều Khiển (Dashboard)</h2>
-        <p style={{ marginBottom: '16px', color: '#666', textAlign: 'center' }}>
-          Xin chào, <strong>{user?.fullName}</strong> ({user?.role})
+      <div className="auth-card" style={{ maxWidth: '560px' }}>
+        <h2>Bảng Điều Khiển Cá Nhân</h2>
+        <p style={{ marginBottom: '16px', color: '#555', textAlign: 'center' }}>
+          Xin chào, <strong>{user?.fullName}</strong>
+          <span className="role-badge">{user?.role}</span>
         </p>
 
         {message && <div className="success-msg">{message}</div>}
@@ -70,7 +71,7 @@ const Dashboard = () => {
 
         <form onSubmit={handleUpdate}>
           <div className="form-group">
-            <label>Email đăng nhập</label>
+            <label>Email đăng nhập (Không thể thay đổi)</label>
             <input type="email" value={user?.email || ''} disabled />
           </div>
           <div className="form-group">
@@ -103,8 +104,12 @@ const Dashboard = () => {
           </button>
         </form>
 
-        <div style={{ display: 'flex', gap: '10px', marginTop: '16px' }}>
-          <button onClick={logout} className="btn-danger" style={{ backgroundColor: '#616161', flex: 1 }}>
+        <div style={{ display: 'flex', gap: '10px', marginTop: '12px' }}>
+          <button
+            onClick={logout}
+            className="btn-danger"
+            style={{ backgroundColor: '#616161', flex: 1 }}
+          >
             Đăng xuất
           </button>
           <button onClick={handleDeleteAccount} className="btn-danger" style={{ flex: 1 }}>
